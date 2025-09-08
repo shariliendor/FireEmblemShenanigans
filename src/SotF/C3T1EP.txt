@@ -1,0 +1,2 @@
+burn 7
+combat 1 2

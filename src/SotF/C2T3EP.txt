@@ -1,0 +1,22 @@
+burn 2
+combat 1 2d
+80h 0c
+100h 10c
+outcomes mhx mc
+
+burn 6
+combat 1
+62h 0c
+outcomes m
+
+burn 1
+combat 1 2d
+34h 0c
+100h 0c
+outcomes xhh
+
+burn 1
+combat 1 2d
+69h 0c
+99h 3c
+outcomes mch mhc

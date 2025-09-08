@@ -1,0 +1,4 @@
+burn 0
+combat 1d
+74h 3c
+outcomes cc
