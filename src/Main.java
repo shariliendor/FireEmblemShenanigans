@@ -6,7 +6,7 @@ public class Main {
 
         System.out.println("Preprocessing...");
 
-        String fileName = "src/SotF/C2T3EP.txt"; // args[0];
+        String fileName = args[0];
         RCTextParser textParser = new RCTextParser();
         RoundCombat[] combats = textParser.parseCombats(fileName);
 
