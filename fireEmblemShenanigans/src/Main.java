@@ -2,10 +2,11 @@ public class Main {
     public static void main(String[] args) {
         // output preferences
         boolean displayCombatInfo = true;
+        boolean debug = false;
 
         System.out.println("Preprocessing...");
 
-        String fileName = "src/SotF/test.txt"; // args[0];
+        String fileName = "src/SotF/C2T3EP.txt"; // args[0];
         RCTextParser textParser = new RCTextParser();
         RoundCombat[] combats = textParser.parseCombats(fileName);
 
@@ -18,7 +19,7 @@ public class Main {
             }
         }
 
-        SeedTester seedTester = new RCSeedTester(combats);
+        SeedTester seedTester = new RCSeedTester(combats, debug);
 
         SeedFinder seedFinder = new SeedFinder(seedTester);
 

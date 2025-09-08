@@ -13,7 +13,9 @@ public class RCSeedTester implements SeedTester {
     // temp variables for optimization
     private int outcomeIndex; // keeps track of how far into outcome strings we are
 
-    public RCSeedTester(RoundCombat[] combats) {
+    private boolean debug; // a flag for debug prints
+
+    public RCSeedTester(RoundCombat[] combats, boolean debug) {
         this.combats = combats;
     }
 
@@ -33,14 +35,15 @@ public class RCSeedTester implements SeedTester {
 
     private boolean testCombat(RoundCombat combat) {
         ArrayList<String> validOutcomes = new ArrayList<>(List.of(combat.getOutcomes()));
-        //ArrayList<Character> outcomeSoFar = new ArrayList<>();
         outcomeIndex = 0;
         endEarly = false;
 
         rnIndex += combat.getPreburn();
 
         // debug
-        System.out.println("burned " + combat.getPreburn());
+        if (debug) {
+            System.out.println("burned " + combat.getPreburn());
+        }
 
         // check first attack
         if (attackFails(combat.getAttack1(), validOutcomes)) {
@@ -48,7 +51,6 @@ public class RCSeedTester implements SeedTester {
         }
 
         if (endEarly) {
-            System.out.println("Ending early");
             endEarly = false;
             return true;
         }
@@ -90,26 +92,27 @@ public class RCSeedTester implements SeedTester {
     private boolean attackFails(Attack attack, ArrayList<String> validOutcomes) {
         String outcome = attack.getOutcome(rnIndex, rnArray);
         updateValidOutcomes(validOutcomes, outcome);
-        // modify for brave
-        rnIndex += Attack.outcomeBurns.get(outcome);
+        rnIndex += Attack.getOutcomeBurns(outcome);
         outcomeIndex += outcome.length();
 
         // debug
-        System.out.println();
-        System.out.println(attack);
+        if (debug) {
+            System.out.println();
+            System.out.println(attack);
 
-        System.out.println("Outcome: " + outcome);
-        System.out.print("RNs: ");
+            System.out.println("Outcome: " + outcome);
+            System.out.print("RNs: ");
 
-        // modify for brave
-        for (int i = rnIndex - Attack.outcomeBurns.get(outcome); i < rnIndex; i++) {
-            System.out.print(rnArray[i] + " ");
+            for (int i = rnIndex - Attack.getOutcomeBurns(outcome); i < rnIndex; i++) {
+                System.out.print(rnArray[i] + " ");
+            }
+            System.out.println();
+
+            if (validOutcomes.isEmpty()) {
+                System.out.println("Failed");
+            }
         }
-        System.out.println();
 
-        if (validOutcomes.isEmpty()) {
-            System.out.println("Failed");
-        }
 
 
         return validOutcomes.isEmpty();
@@ -117,16 +120,35 @@ public class RCSeedTester implements SeedTester {
 
     private void updateValidOutcomes(ArrayList<String> validOutcomes, String outcome) {
         for (int i = validOutcomes.size() - 1; i >= 0; i--) {
-            // add extra function to check equality with x's
-            System.out.println("Outcome: " + outcome + ", check: " + validOutcomes.get(i).substring(outcomeIndex, outcomeIndex + outcome.length()));
-            if (!(validOutcomes.get(i).substring(outcomeIndex, outcomeIndex + outcome.length()).equals(outcome))) {
-                System.out.print("removing " + validOutcomes.get(i));
+            // prints the check
+            //System.out.println("Outcome: " + outcome + ", check: " + validOutcomes.get(i).substring(outcomeIndex, outcomeIndex + outcome.length()));
+            if (!checkOutcomeEquality(outcome, validOutcomes.get(i).substring(outcomeIndex, outcomeIndex + outcome.length()))) {
+                if (debug) System.out.print("removing " + validOutcomes.get(i));
                 validOutcomes.remove(i);
             } else if (validOutcomes.get(i).length() == outcomeIndex + outcome.length()) {
-                System.out.println("Ending early on " + validOutcomes.get(i));
+                if (debug) System.out.println("Ending early on " + validOutcomes.get(i));
                 endEarly = true;
                 return;
             }
         }
+    }
+
+    // returns whether the actual outcome could qualify as the expected one, accounting for x's
+    private boolean checkOutcomeEquality(String actual, String expected) {
+        if (actual.length() != expected.length()) {
+            return false;
+        }
+
+        for (int i = 0; i < actual.length(); i++) {
+            if (expected.charAt(i) == 'x') {
+                continue;
+            }
+
+            if (expected.charAt(i) != actual.charAt(i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
