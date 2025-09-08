@@ -2,7 +2,7 @@ public class Main {
     public static void main(String[] args) {
         // output preferences
         boolean displayCombatInfo = true;
-        boolean debug = false;
+        boolean debug = true;
 
         System.out.println("Preprocessing...");
 

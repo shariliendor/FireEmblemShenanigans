@@ -1,4 +1,4 @@
 burn 0
-combat 1d
-74h 3c
+combat 1
+74h 3c brave
 outcomes cc

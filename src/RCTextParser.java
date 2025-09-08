@@ -77,7 +77,7 @@ public class RCTextParser {
 
         boolean brave = false;
         if (words.length > 2) {
-            if (words[2].equals("b")) {
+            if (words[2].equals("brave")) {
                 brave = true;
             }
         }

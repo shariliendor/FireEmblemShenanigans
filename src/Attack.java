@@ -25,7 +25,7 @@ public class Attack {
         return ob;
     }
 
-    public String getOutcome(int rnIndex, int[] rnArray) {
+    private String getSingleAttackOutcome(int rnIndex, int[] rnArray) {
         int rn1 = rnArray[rnIndex];
         int rn2 = rnArray[rnIndex + 1];
         int avg = (rn1 + rn2) / 2;
@@ -41,6 +41,17 @@ public class Attack {
         return "h";
     }
 
+    public String getOutcome(int rnIndex, int[] rnArray) {
+        if (brave) {
+            String firstAttackOutcome = getSingleAttackOutcome(rnIndex, rnArray);
+            int secondAttackRnIndex = rnIndex + getOutcomeBurns(firstAttackOutcome);
+            String secondAttackOutcome = getSingleAttackOutcome(secondAttackRnIndex, rnArray);
+            return firstAttackOutcome + secondAttackOutcome;
+        }
+
+        return getSingleAttackOutcome(rnIndex, rnArray);
+    }
+
     public static int getOutcomeBurns(String outcome) {
         int burns = 0;
 
@@ -52,7 +63,13 @@ public class Attack {
     }
 
     public String toString() {
-        return hit + "h " + crit + "c";
+        String result = hit + "h " + crit + "c";
+
+        if (brave) {
+            return result + ", Brave";
+        }
+
+        return result;
     }
 
     public int getCrit() {

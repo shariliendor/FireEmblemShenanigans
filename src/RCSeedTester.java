@@ -17,6 +17,7 @@ public class RCSeedTester implements SeedTester {
 
     public RCSeedTester(RoundCombat[] combats, boolean debug) {
         this.combats = combats;
+        this.debug = debug;
     }
 
     @Override
